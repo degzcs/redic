@@ -12,4 +12,9 @@ Gem::Specification.new do |s|
   s.license           = "MIT"
 
   s.add_dependency "hiredis"
+  s.add_dependency "redis"
+
+  s.add_development_dependency "spirit_hands"
+  s.add_development_dependency "cutest"
+
 end
