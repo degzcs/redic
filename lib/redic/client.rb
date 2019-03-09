@@ -31,10 +31,12 @@ class Redic
     def write(command)
       #@connection.write(command)
       cmd_name = command.shift.to_s.downcase
+      block = command.find{ |cmd| cmd.is_a? Proc }
+      #binding.pry if cmd_name == "subscribe"
       @response = if command.empty?
         @connection.send(cmd_name)
       else
-        @connection.send(cmd_name, *command)
+        @connection.send(cmd_name, *command, &block)
       end
     rescue => e
       return raise e if e.message =~ /ERR invalid DB index/
@@ -59,7 +61,7 @@ class Redic
 
     def disconnect!
       if connected?
-        @connection.disconnect
+        @connection.disconnect!
         @connection = false
       end
     end
