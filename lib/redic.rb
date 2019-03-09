@@ -1,3 +1,4 @@
+require 'redis'
 require_relative "redic/client"
 
 class Redic
@@ -52,12 +53,8 @@ class Redic
 
   def commit
     @client.connect do
-      buffer.each do |args|
+      buffer.map do |args|
         @client.write(args)
-      end
-
-      buffer.map do
-        @client.read
       end
     end
   ensure

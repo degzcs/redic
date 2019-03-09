@@ -1,7 +1,8 @@
 require "cutest"
 require_relative "../lib/redic"
+require 'pry'
 
-REDIS_URL = "redis://localhost:6379/"
+REDIS_URL = "redis://localhost:6379/0"
 
 prepare do
   c = Redic.new(REDIS_URL)
@@ -21,7 +22,7 @@ setup do
 end
 
 test "url" do |c|
-  assert_equal "redis://localhost:6379/", c.url
+  assert_equal "redis://localhost:6379/0", c.url
 end
 
 test "select db from url" do |c1|
@@ -97,10 +98,10 @@ test "normal commands" do |c|
 end
 
 test "pipelining" do |c|
-  c.queue("SET", "foo", "bar")
+  c.queue("SET", "foo", "perro")
   c.queue("GET", "foo")
 
-  assert_equal ["OK", "bar"], c.commit
+  assert_equal ["OK", "perro"], c.commit
 end
 
 test "multi/exec" do |c|

@@ -1,5 +1,6 @@
 require_relative "connection"
 require "uri"
+require "redis"
 
 class Redic
   class Client
@@ -23,11 +24,22 @@ class Redic
     end
 
     def read
-      @connection.read
+      #@connection.read
+      @response
     end
 
     def write(command)
-      @connection.write(command)
+      #@connection.write(command)
+      cmd_name = command.shift.to_s.downcase
+      @response = if command.empty?
+        @connection.send(cmd_name)
+      else
+        @connection.send(cmd_name, *command)
+      end
+    rescue => e
+      return raise e if e.message =~ /ERR invalid DB index/
+      return raise e if e.message =~  /ERR invalid password/
+      @response = RuntimeError.new(e.message)
     end
 
     def connect
@@ -66,9 +78,11 @@ class Redic
   private
     def establish_connection
       begin
-        @connection = Redic::Connection.new(@uri, @timeout)
+        #Redic::Connection.new(@uri, @timeout)
+        @connection = Redis.new(url: @uri)
+        raise StandardError if @connection.ping != "PONG"
       rescue StandardError => err
-        raise err, "Can't connect to: %s" % @uri
+        raise err, "Can't connect to: #{@uri} because: #{err.message}"
       end
 
       if @uri.scheme != "unix"
