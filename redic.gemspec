@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name              = "redic"
-  s.version           = "1.5.1"
+  s.version           = "1.6"
   s.summary           = "Lightweight Redis Client"
   s.description       = "Lightweight Redis Client"
   s.authors           = ["Michel Martens", "Cyril David"]
@@ -11,10 +11,9 @@ Gem::Specification.new do |s|
   s.files             = `git ls-files`.split("\n")
   s.license           = "MIT"
 
-  s.add_dependency "hiredis"
-  s.add_dependency "redis"
+  s.add_dependency "redis", "~> 4.1"
 
-  s.add_development_dependency "spirit_hands"
-  s.add_development_dependency "cutest"
+  s.add_development_dependency "spirit_hands", "~> 2.1"
+  s.add_development_dependency "cutest", "~> 1.2"
 
 end
